@@ -896,7 +896,15 @@ public:
 	void UpdateMeshSection(int32 SectionIndex, const TArray<FVector>& Vertices, const TArray<int32>& Triangles, const TArray<FVector>& Normals,
 		const TArray<FVector2D>& UV0, const TArray<FVector2D>& UV1, const TArray<FColor>& Colors, const TArray<FRuntimeMeshTangent>& Tangents, ESectionUpdateFlags UpdateFlags = ESectionUpdateFlags::None);
 
-	
+    //**********************************************************************************************************
+    // Vreal Additions
+    void UpdateMeshSection_Normals(int32 SectionIndex, const TArray<FVector>& Normals, ESectionUpdateFlags UpdateFlags = ESectionUpdateFlags::None);
+    void UpdateMeshSection_Tangents(int32 SectionIndex, const TArray<FRuntimeMeshTangent>& Tangents, ESectionUpdateFlags UpdateFlags = ESectionUpdateFlags::None);
+    void UpdateMeshSection_UV0(int32 SectionIndex, const TArray<FVector2D>& UV0, ESectionUpdateFlags UpdateFlags = ESectionUpdateFlags::None);
+    void UpdateMeshSection_UV1(int32 SectionIndex, const TArray<FVector2D>& UV1, ESectionUpdateFlags UpdateFlags = ESectionUpdateFlags::None);
+    void UpdateMeshSection_Colors(int32 SectionIndex, const TArray<FColor>& Colors, ESectionUpdateFlags UpdateFlags = ESectionUpdateFlags::None);
+    // End Vreal Additions
+    //**********************************************************************************************************
 
 	void CreateMeshSection_Blueprint(int32 SectionIndex, const TArray<FVector>& Vertices, const TArray<int32>& Triangles, const TArray<FVector>& Normals,
 		const TArray<FRuntimeMeshTangent>& Tangents, const TArray<FVector2D>& UV0, const TArray<FVector2D>& UV1, const TArray<FLinearColor>& Colors,

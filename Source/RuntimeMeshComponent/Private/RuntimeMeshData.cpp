@@ -447,7 +447,137 @@ void FRuntimeMeshData::UpdateMeshSectionFromComponents(int32 SectionIndex, const
 	UpdateSectionInternal(SectionIndex, BuffersToUpdate, UpdateFlags);
 }
 
+//**********************************************************************************************************
+// Vreal Additions
+void FRuntimeMeshData::UpdateMeshSection_Normals(int32 SectionIndex, const TArray<FVector>& Normals, ESectionUpdateFlags UpdateFlags)
+{
+    FRuntimeMeshScopeLock Lock(SyncRoot);
+    FRuntimeMeshSectionPtr& Section = MeshSections[SectionIndex];
+    ERuntimeMeshBuffersToUpdate BuffersToUpdate = ERuntimeMeshBuffersToUpdate::TangentBuffer;
 
+    TSharedPtr<FRuntimeMeshAccessor> MeshData = Section->GetSectionMeshAccessor();
+
+    int32 maxVerts = FMath::Min(MeshData->NumVertices(), Normals.Num());
+
+    // Overwrite existing data
+    for(int32 Index = 0; Index < maxVerts; Index++)
+    {
+        MeshData->SetNormal(Index, Normals[Index]);
+    }
+
+    // Fill remaining mesh data
+    for(int32 Index = maxVerts; Index < MeshData->NumVertices(); Index++)
+    {
+        MeshData->SetNormal(Index, FVector(0.0f, 0.0f, 1.0f));
+    }
+
+    // Finalize section.
+    UpdateSectionInternal(SectionIndex, BuffersToUpdate, UpdateFlags);
+}
+void FRuntimeMeshData::UpdateMeshSection_Tangents(int32 SectionIndex, const TArray<FRuntimeMeshTangent>& Tangents, ESectionUpdateFlags UpdateFlags)
+{
+    FRuntimeMeshScopeLock Lock(SyncRoot);
+    FRuntimeMeshSectionPtr& Section = MeshSections[SectionIndex];
+    ERuntimeMeshBuffersToUpdate BuffersToUpdate = ERuntimeMeshBuffersToUpdate::TangentBuffer;
+
+    TSharedPtr<FRuntimeMeshAccessor> MeshData = Section->GetSectionMeshAccessor();
+
+    int32 maxVerts = FMath::Min(MeshData->NumVertices(), Tangents.Num());
+
+    // Overwrite existing data
+    for(int32 Index = 0; Index < maxVerts; Index++)
+    {
+        MeshData->SetTangent(Index, Tangents[Index]);
+    }
+
+    // Fill remaining mesh data
+    for(int32 Index = maxVerts; Index < MeshData->NumVertices(); Index++)
+    {
+        MeshData->SetTangent(Index, FVector(0.0f, 0.0f, 1.0f));
+    }
+
+    // Finalize section.
+    UpdateSectionInternal(SectionIndex, BuffersToUpdate, UpdateFlags);
+}
+void FRuntimeMeshData::UpdateMeshSection_UV0(int32 SectionIndex, const TArray<FVector2D>& UV0, ESectionUpdateFlags UpdateFlags)
+{
+    FRuntimeMeshScopeLock Lock(SyncRoot);
+    FRuntimeMeshSectionPtr& Section = MeshSections[SectionIndex];
+    ERuntimeMeshBuffersToUpdate BuffersToUpdate = ERuntimeMeshBuffersToUpdate::UVBuffer;
+
+    TSharedPtr<FRuntimeMeshAccessor> MeshData = Section->GetSectionMeshAccessor();
+    if(MeshData->NumUVChannels() < 2)
+        return;
+
+    int32 maxVerts = FMath::Min(MeshData->NumVertices(), UV0.Num());
+
+    // Overwrite existing data
+    for(int32 Index = 0; Index < maxVerts; Index++)
+    {
+        MeshData->SetUV(Index, 0, UV0[Index]);
+    }
+
+    // Fill remaining mesh data
+    for(int32 Index = maxVerts; Index < MeshData->NumVertices(); Index++)
+    {
+        MeshData->SetUV(Index, 0, FVector2D::ZeroVector);
+    }
+
+    // Finalize section.
+    UpdateSectionInternal(SectionIndex, BuffersToUpdate, UpdateFlags);
+}
+void FRuntimeMeshData::UpdateMeshSection_UV1(int32 SectionIndex, const TArray<FVector2D>& UV1, ESectionUpdateFlags UpdateFlags)
+{
+    FRuntimeMeshScopeLock Lock(SyncRoot);
+    FRuntimeMeshSectionPtr& Section = MeshSections[SectionIndex];
+    ERuntimeMeshBuffersToUpdate BuffersToUpdate = ERuntimeMeshBuffersToUpdate::UVBuffer;
+
+    TSharedPtr<FRuntimeMeshAccessor> MeshData = Section->GetSectionMeshAccessor();
+
+    int32 maxVerts = FMath::Min(MeshData->NumVertices(), UV1.Num());
+
+    // Overwrite existing data
+    for(int32 Index = 0; Index < maxVerts; Index++)
+    {
+        MeshData->SetUV(Index, 1, UV1[Index]);
+    }
+
+    // Fill remaining mesh data
+    for(int32 Index = maxVerts; Index < MeshData->NumVertices(); Index++)
+    {
+        MeshData->SetUV(Index, 1, FVector2D::ZeroVector);
+    }
+
+    // Finalize section.
+    UpdateSectionInternal(SectionIndex, BuffersToUpdate, UpdateFlags);
+}
+void FRuntimeMeshData::UpdateMeshSection_Colors(int32 SectionIndex, const TArray<FColor>& Colors, ESectionUpdateFlags UpdateFlags)
+{
+    FRuntimeMeshScopeLock Lock(SyncRoot);
+    FRuntimeMeshSectionPtr& Section = MeshSections[SectionIndex];
+    ERuntimeMeshBuffersToUpdate BuffersToUpdate = ERuntimeMeshBuffersToUpdate::ColorBuffer;
+
+    TSharedPtr<FRuntimeMeshAccessor> MeshData = Section->GetSectionMeshAccessor();
+
+    int32 maxVerts = FMath::Min(MeshData->NumVertices(), Colors.Num());
+
+    // Overwrite existing data
+    for(int32 Index = 0; Index < maxVerts; Index++)
+    {
+        MeshData->SetColor(Index, Colors[Index]);
+    }
+
+    // Fill remaining mesh data
+    for(int32 Index = maxVerts; Index < MeshData->NumVertices(); Index++)
+    {
+        MeshData->SetColor(Index, FColor::White);
+    }
+
+    // Finalize section.
+    UpdateSectionInternal(SectionIndex, BuffersToUpdate, UpdateFlags);
+}
+// End Vreal Additions
+//**********************************************************************************************************
 
 void FRuntimeMeshData::CreateMeshSection(int32 SectionIndex, const TArray<FVector>& Vertices, const TArray<int32>& Triangles, const TArray<FVector>& Normals,
 	const TArray<FVector2D>& UV0, const TArray<FColor>& Colors, const TArray<FRuntimeMeshTangent>& Tangents, bool bCreateCollision, EUpdateFrequency UpdateFrequency,

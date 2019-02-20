@@ -202,6 +202,19 @@ struct FRuntimeMeshTangent
 		, bFlipTangentY(bInFlipTangentY)
 	{}
 
+    // Vreal Addition
+    void Set(FVector4& Tangent)
+    {
+        TangentX.X = Tangent.X; TangentX.Y = Tangent.Y; TangentX.Z = Tangent.Z;
+        bFlipTangentY = Tangent.W == -1 ? true : false;
+    }
+    void Set(float X, float Y, float Z, float W)
+    {
+        TangentX.X = X; TangentX.Y = Y; TangentX.Z = Z;
+        bFlipTangentY = W == -1 ? true : false;
+    }
+    // End Vreal Addition
+
 	void ModifyNormal(FVector4& Normal) const { Normal.W = bFlipTangentY ? -1 : 1; }
 	void ModifyNormal(FPackedNormal& Normal) const { Normal.Vector.W = bFlipTangentY ? 0 : MAX_uint8; }
 	void ModifyNormal(FPackedRGBA16N& Normal) const { Normal.W = bFlipTangentY ? 0 : MAX_uint16; }
