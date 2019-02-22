@@ -9,8 +9,9 @@ public class RuntimeMeshComponent : ModuleRules
     {
         PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
         bFasterWithoutUnity = true;
+		//OptimizeCode = CodeOptimization.Never;
 
-        PublicIncludePaths.Add(Path.Combine(ModuleDirectory, "Public"));
+		PublicIncludePaths.Add(Path.Combine(ModuleDirectory, "Public"));
         PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "Private"));
 
 

@@ -449,6 +449,31 @@ void FRuntimeMeshData::UpdateMeshSectionFromComponents(int32 SectionIndex, const
 
 //**********************************************************************************************************
 // Vreal Additions
+void FRuntimeMeshData::UpdateMeshSection_Vertices(int32 SectionIndex, const TArray<FVector>& Vertices, ESectionUpdateFlags UpdateFlags)
+{
+    FRuntimeMeshScopeLock Lock(SyncRoot);
+    FRuntimeMeshSectionPtr& Section = MeshSections[SectionIndex];
+    ERuntimeMeshBuffersToUpdate BuffersToUpdate = ERuntimeMeshBuffersToUpdate::PositionBuffer;
+
+    TSharedPtr<FRuntimeMeshAccessor> MeshData = Section->GetSectionMeshAccessor();
+
+    int32 maxVerts = FMath::Min(MeshData->NumVertices(), Vertices.Num());
+
+    // Overwrite existing data
+    for(int32 Index = 0; Index < maxVerts; Index++)
+    {
+        MeshData->SetPosition(Index, Vertices[Index]);
+    }
+
+    // Fill remaining mesh data
+    for(int32 Index = maxVerts; Index < MeshData->NumVertices(); Index++)
+    {
+        MeshData->SetPosition(Index, FVector(0.0f, 0.0f, 1.0f));
+    }
+
+    // Finalize section.
+    UpdateSectionInternal(SectionIndex, BuffersToUpdate, UpdateFlags);
+}
 void FRuntimeMeshData::UpdateMeshSection_Normals(int32 SectionIndex, const TArray<FVector>& Normals, ESectionUpdateFlags UpdateFlags)
 {
     FRuntimeMeshScopeLock Lock(SyncRoot);
