@@ -816,7 +816,7 @@ public:
 	}
 
 	template<typename IndexType>
-	void UpdateMeshSectionTriangles(int32 SectionId, TArray<IndexType>& InTriangles, ESectionUpdateFlags UpdateFlags = ESectionUpdateFlags::None)
+	void UpdateMeshSectionTriangles(int32 SectionId, const TArray<IndexType>& InTriangles, ESectionUpdateFlags UpdateFlags = ESectionUpdateFlags::None)
 	{
 		SCOPE_CYCLE_COUNTER(STAT_RuntimeMesh_UpdateMeshSectionTriangles);
 
