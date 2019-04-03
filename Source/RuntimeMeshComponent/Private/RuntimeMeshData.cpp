@@ -499,7 +499,7 @@ void FRuntimeMeshData::UpdateMeshSection_Normals(int32 SectionIndex, const TArra
     // Finalize section.
     UpdateSectionInternal(SectionIndex, BuffersToUpdate, UpdateFlags);
 }
-void FRuntimeMeshData::UpdateMeshSection_Tangents(int32 SectionIndex, const TArray<FRuntimeMeshTangent>& Tangents, ESectionUpdateFlags UpdateFlags)
+void FRuntimeMeshData::UpdateMeshSection_Tangents(int32 SectionIndex, const TArray<FVector4>& Tangents, ESectionUpdateFlags UpdateFlags)
 {
     FRuntimeMeshScopeLock Lock(SyncRoot);
     FRuntimeMeshSectionPtr& Section = MeshSections[SectionIndex];
@@ -512,7 +512,8 @@ void FRuntimeMeshData::UpdateMeshSection_Tangents(int32 SectionIndex, const TArr
     // Overwrite existing data
     for(int32 Index = 0; Index < maxVerts; Index++)
     {
-        MeshData->SetTangent(Index, Tangents[Index]);
+        FRuntimeMeshTangent tangent; tangent.Set(Tangents[Index]);
+        MeshData->SetTangent(Index, tangent);
     }
 
     // Fill remaining mesh data

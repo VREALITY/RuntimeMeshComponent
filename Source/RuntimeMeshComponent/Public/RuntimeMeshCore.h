@@ -203,7 +203,7 @@ struct FRuntimeMeshTangent
 	{}
 
     // Vreal Addition
-    void Set(FVector4& Tangent)
+    void Set(const FVector4& Tangent)
     {
         TangentX.X = Tangent.X; TangentX.Y = Tangent.Y; TangentX.Z = Tangent.Z;
         bFlipTangentY = Tangent.W == -1 ? true : false;
